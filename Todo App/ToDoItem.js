@@ -1,69 +1,67 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { CheckBox } from 'react-native-elements';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const styles = StyleSheet.create({
-    items: {
+    item: {
+        margin: 10,
+        padding: 10,
         backgroundColor: 'white',
         borderBottomWidth: 1,
-        borderBottomColor: 'rgb(200, 200, 200)',
-        height: 60,
+        borderBottomColor: 'rgb(200, 200, 200)'
     },
 
-    container: {
-        fontSize: 20,
+    itemHeading: {
+        fontSize: 24,
+        marginBottom: 5,
     },
 
-    checked: {
-        color: 'black',
+    itemText: {
+        fontSize: 16,
+        marginBottom: 5,
     },
 
-    unchecked: {
+    headingDone:{
+        fontSize: 24,
+        marginBottom: 5, 
+        color: 'rgb(220, 220, 220)',
+        textDecorationLine: 'line-through'
+    },
+
+    textDone: {
+        fontSize: 16,
+        marginBottom: 5,
         color: 'rgb(220, 220, 220)',
         textDecorationLine: 'line-through'
     }
 })
 
-class ToDoItem extends React.Component {
+class TodoItem extends React.Component {
     constructor(props) {
-        super(props);
-        this.state = {
-          time: '',
-          ifChecked: false
-        };
-      }
-    
-    componentDidMount() {
-        var that = this;
-        var date = new Date().getDate(); //Current Date
-        var month = new Date().getMonth() + 1; //Current Month
-        var year = new Date().getFullYear(); //Current Year
-        var hours = new Date().getHours(); //Current Hours
-        var min = new Date().getMinutes(); //Current Minutes
-        var sec = new Date().getSeconds(); //Current Seconds
-        that.setState({
-          time:
-            date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec,
-        });
+        super(props)
+        this.onItemPress = this.onItemPress.bind(this)
+    }
+
+    onItemPress() {
+        this.props.onToggleDone(this.props.index)
     }
 
     render() {
+        const time = new Date()
+
         return (
-            <View style={styles.items}>
-                <Text style={styles.container}>
-                    <CheckBox 
-                      checkedIcon='check-square-o'
-                      uncheckedIcon='square-o'
-                      checked={this.state.ifChecked}
-                      onPress={() => this.setState({ifChecked: !this.state.ifChecked})}
-                    />
-                    <Text style={this.state.ifChecked ? styles.unchecked : styles.checked}>
-                        {this.props.item} {' - '} {this.state.time}
-                    </Text>
+            <TouchableOpacity onPress={this.onItemPress} style={[styles.item, this.props.done && styles.done]}>
+                <Text style={this.props.done ? styles.headingDone : styles.itemHeading}>
+                    {this.props.label}
                 </Text>
-            </View>
+                <Text style={this.props.done ? styles.textDone : styles.itemText}>
+                    {this.props.done ? 'completed' : 'not completed'}
+                </Text>
+                <Text style={this.props.done ? styles.textDone : styles.itemText}>
+                    Last rendered on: {time.toLocaleTimeString()}
+                </Text>
+            </TouchableOpacity>
         )
-    }
+    }    
 }
 
-export default ToDoItem;
+export default TodoItem;

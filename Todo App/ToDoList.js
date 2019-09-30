@@ -1,43 +1,63 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
-import ToDoItem from './ToDoItem'; 
+import { StyleSheet, Text, View, TextInput, Button, ScrollView, FlatList } from 'react-native';
+import TodoItem from './TodoItem' 
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
+  container: {
+      flex: 1,
+  },
 
-    input: {
-        flex: 1,
-        backgroundColor: 'rgba(255, 255, 255, 0.5)',
-        fontSize: 18,
-        padding: 10
-    },
+  input: {
+      flex: 1,
+      backgroundColor: 'rgba(255, 255, 255, 0.5)',
+      fontSize: 18,
+      padding: 10
+  },
 
-    inputRow: {
-        flexDirection: 'row'
-    },
+  inputRow: {
+      flexDirection: 'row',
+      shadowColor: 'rgba(0, 0, 0, 0.7)',
+      shadowOffset: {
+        width: 0,
+        height: 0
+      },
+      shadowRadius: 3,
+      shadowOpacity: 1
+  },
 
-    todos: {
-        flexDirection: 'column'
-    },
+  todos: {
+      flexDirection: 'column'
+  },
 
-    button: {
-
-    },
+  button: {
+      shadowColor: 'rgba(0, 0, 0, 0.7)',
+      shadowOffset: {
+        width: 0,
+        height: 1
+      },
+      shadowRadius: 3,
+      shadowOpacity: 1
+  }
 })
 
-class ToDoList extends React.Component {
+class TodoList extends React.Component {
+    static navigationOptions = {
+      title: 'School Work',
+    }
+
     constructor(props) {
         super(props)
 
+        const initialItems = [] 
+        
         this.state = {
             value: '',
-            items: []
+            items: initialItems
         }
 
         this.onBoundInputChange = this.onInputChange.bind(this)
         this.onBoundButtonPress = this.onButtonPress.bind(this)
+        this.onBoundToggleDone = this.onToggleDone.bind(this)
     }
 
     onInputChange(text) {
@@ -45,15 +65,19 @@ class ToDoList extends React.Component {
     }
 
     onButtonPress() {
-        const items = this.state.items;
-        items.push(this.state.value)
+        const items = this.state.items
+        items.push({label: this.state.value, done: false, i: this.state.items.length})
         this.setState({ value: '', items: items })
     }
 
-    render() {
-        // Mapping
-        const todoItems = this.state.items.map((item) => <ToDoItem item={item} />)
+    onToggleDone(index) {
+      const item = this.state.items[index]
+      item.done = !item.done
+      this.setState({items: this.state.items.slice(0)})
+      this.props.navigation.navigate('Details', { item: item })
+    }
 
+    render() {
         return (
             <View style={styles.container}>
                 <View style={styles.inputRow}>
@@ -74,12 +98,27 @@ class ToDoList extends React.Component {
                     title=" Clear "
                   />
                 </View>
-                <View style={styles.todos}>
+                {/* <ScrollView style={styles.todos}>
                     {todoItems}
-                </View>
+                </ScrollView> */}
+                <FlatList
+                    data={this.state.items}
+                    removeClippedSubviews={true}
+                    initialNumToRender={3}
+                    extraData={this.state.items.length}
+                    renderItem={(props) => (
+                      <TodoItem
+                        label={props.item.label}
+                        done={props.item.done}
+                        index={props.item.i}
+                        onToggleDone={this.onBoundToggleDone}
+                      />
+                    ) }
+                    keyExtractor={item => String(item.i)}
+                />
             </View>
         )
     }    
 }
 
-export default ToDoList;
+export default TodoList;

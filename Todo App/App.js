@@ -1,58 +1,71 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import ToDoList from './ToDoList';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 
-const styles = StyleSheet.create({
-    text: {
-        fontFamily: 'Cochin',
-        color: '#FFFFFF',
-        textTransform: 'capitalize'
-    },
+import TodoList from './TodoList' 
+import TodoDetails from './TodoDetails'
 
-    block: {
-        height: 100
-    },
+const styles = StyleSheet.create({  
+  text: {
+    fontFamily: 'Cochin',
+    color: '#FFFFFF',
+    textTransform: 'capitalize'
+  },
 
-    header: {
-        height: 150,
-        backgroundImage: `url(${"./img/bg_img.gif"})`,
-        backgroundSize: 'cover',
-        flexDirection: 'row',
-        alignItems: 'stretch'
-    },
+  block: {
+      height: 100
+  },
 
-    mainContent: {
-        flex: 1,
-        justifyContent: "space-evenly"
-    },
+  header: {
+      top: 65,
+      height: 150,
+      backgroundImage: `url(${"./img/bg_img.gif"})`,
+      backgroundSize: 'cover',
+      flexDirection: 'row',
+      alignItems: 'stretch'
+  },
 
-    container: {
-        flex: 1,
-        flexDirection: 'column',
-        alignItems: 'stretch',
-        backgroundColor: 'lightgray'
-    },
+  mainContent: {
+      flex: 1,
+      justifyContent: "space-evenly"
+  },
 
-    headerText: {
-      height: '100%',
-      width: '100%',
-      color: 'white',
-      backgroundColor: 'rgba(0, 0, 0, 0.6)',
-      textAlign: 'center',
-      paddingTop: 45
-    },
+  container: {
+      flex: 1,
+      flexDirection: 'column',
+      alignItems: 'stretch',
+      backgroundColor: 'lightgray'
+  },
 
-    title: {
-      fontSize: 28,
-      fontFamily: 'Arial-BoldMT',
-      textTransform: 'uppercase',
-    },
+  headerText: {
+    height: '100%',
+    width: '100%',
+    color: 'white',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    textAlign: 'center',
+    paddingTop: 45
+  },
 
-    date: {
-      fontSize: 18,
-    }
+  title: {
+    fontSize: 28,
+    fontFamily: 'Arial-BoldMT',
+    textTransform: 'uppercase',
+  },
 
+  date: {
+    fontSize: 18,
+  }
 });
+
+const screens = {
+  Details: TodoDetails,
+  List: TodoList,
+}
+
+const navigation = createStackNavigator(screens, {initialRouteName: 'List'})
+const NavigationContainer = createAppContainer(navigation)
+
 
 export default class App extends Component {
 
@@ -93,7 +106,7 @@ export default class App extends Component {
           </Text>
         </View>
         <View style={styles.mainContent}>
-          <ToDoList />
+          <NavigationContainer />
         </View>
       </View>
     );
