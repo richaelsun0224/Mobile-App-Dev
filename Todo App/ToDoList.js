@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
       shadowOpacity: 1
   },
 
-  todos: {
+  todos: { 
       flexDirection: 'column'
   },
 
