@@ -1,6 +1,7 @@
 import { AsyncStorage, StyleSheet, TouchableOpacity, Text, TextInput, View } from 'react-native'
 import React from 'react'
 import store from './store'
+import { firestore } from './firebase'
 
 const styles = StyleSheet.create({
   btn: {
@@ -57,6 +58,15 @@ class MyButtonComponent extends React.Component {
     }
 
     reset() {
+      const dbh = firebase.firestore();
+      dbh.collection("items").doc("list").set({
+        num1: this.props.store.state.list[0],
+        num2: this.props.store.state.list[1],
+        num3: this.props.store.state.list[2],
+        num4: this.props.store.state.list[3],
+        num5: this.props.store.state.list[4],
+        num6: this.props.store.state.list[5]
+      })
       this.props.store.dispatch('RESET')
     }
 
